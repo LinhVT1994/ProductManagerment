@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductManagerment
 {
-    class Program
+    class ProductAdministrator
     {
-        static void Main(string[] args)
-        {
-
-        }
     }
 }
