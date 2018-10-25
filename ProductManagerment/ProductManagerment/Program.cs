@@ -10,7 +10,8 @@ namespace ProductManagerment
     {
         static void Main(string[] args)
         {
-
+            ProductAdministratorExcecuter.Execute();
+            Console.Read();
         }
     }
 }
