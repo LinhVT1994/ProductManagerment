@@ -59,22 +59,22 @@ namespace ProductManagerment
         /// To find products by an Id.
         /// </summary>
         /// <param name="id">The Id what wants to find.</param>
-        public Product FindById(string id)
+        public Product FindById(string id, bool deleteFlag = false)// the default is get all of items includes deleted items.
         {
-            return _ListProduct.FirstOrDefault(item => item.Id.ToLower().Equals(id.ToLower()));
+            return _ListProduct.FirstOrDefault(item => item.Id.ToLower().Equals(id.ToLower()) && (!deleteFlag));
         }
         /// <summary>
         /// To find products in the products list by a name of the product.
         /// </summary>
         /// <param name="name">The name of the product what wants to find.</param>
         /// <returns>A list of products what marched with a name.</returns>
-        public List<Product> FindByName(string name)
+        public List<Product> FindByName(string name, bool deleteFlag = false) // the default is get all of items includes deleted items.
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 return null;
             }
-            IEnumerable<Product> foundItems = _ListProduct.Where(item => item.Name.ToLower().Contains(name.ToLower()));
+            IEnumerable<Product> foundItems = _ListProduct.Where(item => item.Name.ToLower().Contains(name.ToLower())&&(!deleteFlag));
             if (foundItems == null)
             {
                 return null;

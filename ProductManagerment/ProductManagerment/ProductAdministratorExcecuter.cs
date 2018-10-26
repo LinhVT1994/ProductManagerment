@@ -34,17 +34,22 @@ namespace ProductManagerment
         {
             ProductAdministrator productAdministrator = ProductAdministrator.GetInstance();
             productAdministrator.AddProducts(listProductTest);
+            Console.WriteLine("-->-------------------- List all of items.-------------------<--");
             productAdministrator.ShowItems();
-            Console.WriteLine("-------------------- Find by an id BookO5-------------------");
+
+            Console.WriteLine("-->-------------------- Find by an id BookO5--------------------<--");
             Product product =  productAdministrator.FindById("BookO5");
             ShowAProduct(product);
             Console.WriteLine();
-            Console.WriteLine("-------------------- Find by an id what is not exist. -------------------");
+            Console.WriteLine("-->-------------------- Find by an id what is not exist. -------------------<--");
             product = productAdministrator.FindById("BookO100");
             ShowAProduct(product);
-            Console.WriteLine("-------------------- Find by a name -------------------");
+            Console.WriteLine("-->-------------------- Find by a name -------------------<--");
             List<Product> list = productAdministrator.FindByName("java");
             ShowAList(list);
+            Console.WriteLine("-->--------------------Delete a product -------------------<--");
+            productAdministrator.Delete("BookO5");
+            productAdministrator.ShowItems();
         }
 
         public static void ShowAList(List<Product> products)
