@@ -50,6 +50,7 @@ namespace ProductManagerment
             Console.WriteLine("-->--------------------Delete a product -------------------<--");
             productAdministrator.Delete("BookO5");
             productAdministrator.ShowItems();
+            Console.WriteLine(productAdministrator.Account());
         }
 
         public static void ShowAList(List<Product> products)

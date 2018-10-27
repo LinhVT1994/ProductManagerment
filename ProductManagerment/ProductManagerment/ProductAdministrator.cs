@@ -82,12 +82,21 @@ namespace ProductManagerment
             return foundItems.ToList();
 
         }
-        public void ShowItems()
+        public double Account()
+        {
+             return  _ListProduct.Sum(item => item.Price * item.Amount);
+        }
+
+        public void ShowItems(bool deleteFlag = false)
         {
             Console.WriteLine("There are {0} items in the stock.",_ListProduct.Count);
             int count = 0;
             foreach (Product item in _ListProduct)
             {
+                if (!deleteFlag)
+                {
+
+                }
                 Console.WriteLine("-->"+ ++count + " "+ item.ToString());
             }
         }
