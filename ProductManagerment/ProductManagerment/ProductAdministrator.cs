@@ -82,9 +82,10 @@ namespace ProductManagerment
             return foundItems.ToList();
 
         }
-        public double Account()
+
+        public int CountAmountOfProducts(bool deleteFlag = false)// the default is get all of items includes deleted items
         {
-             return  _ListProduct.Sum(item => item.Price * item.Amount);
+            return Products.Count(item => !item.DeleteFlag);
         }
 
         public void ShowItems(bool deleteFlag = false)

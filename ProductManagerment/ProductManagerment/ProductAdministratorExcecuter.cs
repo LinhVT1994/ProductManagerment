@@ -10,9 +10,9 @@ namespace ProductManagerment
     {
         static List<Product> listProductTest = new List<Product>()
         {
-            new Product(Category.Book,"BookO1","Harry Potter and the Philosopher's Stone",12000,0.12),
-            new Product(Category.Book,"BookO2","Harry Potter and the Chamber of Secrets",13000,0.12),
-            new Product(Category.Book,"BookO3","Harry Potter and the Prisoner of Azkaban",11500,0.2),
+            new Product(Category.Book,"BookO1","Harry Potter and the Philosopher's Stone",12000,16.7676),
+            new Product(Category.Book,"BookO2","Harry Potter and the Chamber of Secrets",13000,13.123434),
+            new Product(Category.Book,"BookO3","Harry Potter and the Prisoner of Azkaban",11500,20),
             new Product(Category.Book,"BookO4","Harry Potter and the Goblet of Fire",13000,0.13),
             new Product(Category.Book,"BookO5","Harry Potter and the Order of the Phoenix",14000,0.14),
             new Product(Category.Book,"BookO6","Harry Potter and the Half-Blood Prince",12400,0.13),
@@ -30,29 +30,90 @@ namespace ProductManagerment
             new Product(Category.CD,"CD0006","Harry Potter and the Half-Blood Prince",38000,1.13),
             new Product(Category.CD,"CD0007","Harry Potter and the Deathly Hallows",39000,1.13),
         };
+        private ProductAdministrator productAdministrator = null;
+        public  ProductAdministratorExcecuter(List<Product> list)
+        {
+            productAdministrator = ProductAdministrator.GetInstance();
+            productAdministrator.AddProducts(list);
+        }
+      
         public static void Execute()
         {
-            ProductAdministrator productAdministrator = ProductAdministrator.GetInstance();
-            productAdministrator.AddProducts(listProductTest);
-            Console.WriteLine("-->-------------------- List all of items.-------------------<--");
-            productAdministrator.ShowItems();
-
-            Console.WriteLine("-->-------------------- Find by an id BookO5--------------------<--");
-            Product product =  productAdministrator.FindById("BookO5");
-            ShowAProduct(product);
-            Console.WriteLine();
-            Console.WriteLine("-->-------------------- Find by an id what is not exist. -------------------<--");
-            product = productAdministrator.FindById("BookO100");
-            ShowAProduct(product);
-            Console.WriteLine("-->-------------------- Find by a name -------------------<--");
-            List<Product> list = productAdministrator.FindByName("java");
-            ShowAList(list);
-            Console.WriteLine("-->--------------------Delete a product -------------------<--");
-            productAdministrator.Delete("BookO5");
-            productAdministrator.ShowItems();
-            Console.WriteLine(productAdministrator.Account());
+            ProductAdministratorExcecuter excecuter = new ProductAdministratorExcecuter(listProductTest);
+            Console.WriteLine("Total price of products: {0} Average price: {1} ",excecuter.TotalPrice,excecuter.PriceAverage);
         }
 
+        public double Profit
+        {
+            get
+            {
+                return productAdministrator.Products.Sum(item => item.DeleteFlag ? 0 : item.ProfitRate * item.Price / 100);
+            }
+          
+        }
+        public double MaximumOfProfit
+        {
+            get
+            {
+                return productAdministrator.Products.Max(item => item.DeleteFlag ? int.MinValue : item.ProfitRate * item.Price / 100);
+            }
+          
+        }
+        public double MinimumOfProfit
+        {
+            get
+            {
+                return productAdministrator.Products.Min(item => item.DeleteFlag ? int.MaxValue : item.ProfitRate * item.Price / 100);
+
+            }
+        }
+        public double AverageOfProfit
+        {
+            get
+            {
+                return Profit / productAdministrator.CountAmountOfProducts();
+            }
+             
+        }
+        public double TotalPrice
+        {
+            get
+            {
+                return productAdministrator.Products.Sum(item => item.DeleteFlag ? 0 : item.Price * item.Amount);
+            }
+           
+        }
+        public double PriceAverage
+        {
+            get
+            {
+                double sumOfPrices = TotalPrice;
+                return sumOfPrices / productAdministrator.CountAmountOfProducts();
+            }
+            
+        }
+        public double MaximumOfProfitRate
+        {
+            get
+            {
+                return Math.Round(productAdministrator.Products.Max(item => item.DeleteFlag ? int.MinValue : item.ProfitRate));
+            }
+        }
+        public double MinimumOfProfitRate
+        {
+            get
+            {
+              return  Math.Round(productAdministrator.Products.Min(item => item.DeleteFlag ? int.MaxValue : item.ProfitRate));
+            }
+        }
+        public double AverageOfProfitRate
+        {
+            get
+            {
+                return productAdministrator.Products.Sum(item => item.DeleteFlag ? 0 : item.ProfitRate) / productAdministrator.CountAmountOfProducts();
+            }
+           
+        }
         public static void ShowAList(List<Product> products)
         {
             Console.WriteLine("There are {0} items found", products.Count);
