@@ -22,7 +22,6 @@ namespace ProductManagerment
         {
             _ListProduct = new List<Product>();
         }
-
         public bool AddProduct(Product product)
         {
             // validate the validation of parameters of the entered product.
@@ -59,22 +58,39 @@ namespace ProductManagerment
         /// To find products by an Id.
         /// </summary>
         /// <param name="id">The Id what wants to find.</param>
-        public Product FindById(string id, bool deleteFlag = false)// the default is get all of items includes deleted items.
+        public Product FindById(string id, bool includingDeletedElements = false)// the default is get all of items includes deleted items.
         {
-            return _ListProduct.FirstOrDefault(item => item.Id.ToLower().Equals(id.ToLower()) && (!deleteFlag));
+            if (includingDeletedElements)
+            {
+                return _ListProduct.FirstOrDefault(item => item.Id.ToLower().Equals(id.ToLower()));
+            }
+            else
+            {
+                return _ListProduct.FirstOrDefault(item => item.Id.ToLower().Equals(id.ToLower()) && (!item.DeleteFlag));
+               
+            }
+         
         }
         /// <summary>
         /// To find products in the products list by a name of the product.
         /// </summary>
         /// <param name="name">The name of the product what wants to find.</param>
         /// <returns>A list of products what marched with a name.</returns>
-        public List<Product> FindByName(string name, bool deleteFlag = false) // the default is get all of items includes deleted items.
+        public List<Product> FindByName(string name, bool includingDeletedElements = false) // the default is get all of items includes deleted items.
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 return null;
             }
-            IEnumerable<Product> foundItems = _ListProduct.Where(item => item.Name.ToLower().Contains(name.ToLower())&&(!deleteFlag));
+            IEnumerable<Product> foundItems = null;
+            if (includingDeletedElements)
+            {
+                foundItems = _ListProduct.Where(item => item.Name.ToLower().Contains(name.ToLower()));
+            }
+            else
+            {
+                foundItems = _ListProduct.Where(item => item.Name.ToLower().Contains(name.ToLower()) && (!item.DeleteFlag));
+            }
             if (foundItems == null)
             {
                 return null;
@@ -82,25 +98,52 @@ namespace ProductManagerment
             return foundItems.ToList();
 
         }
-
-        public int CountAmountOfProducts(bool deleteFlag = false)// the default is get all of items includes deleted items
+        /// <summary>
+        /// 商品の数量を計算する。
+        /// </summary>
+        /// <param name="includingDeletedElements">削除した商品も含むかどうか。既定は含まないです</param>
+        /// <returns></returns>
+        public int CountAmountOfProducts(bool includingDeletedElements = false)// the default is get all of items includes deleted items
         {
-            return Products.Count(item => !item.DeleteFlag);
+            if (includingDeletedElements)
+            {
+                return Products.Count;
+            }
+            else
+            {
+                return Products.Count(item => !item.DeleteFlag);
+            }
         }
-
-        public void ShowItems(bool deleteFlag = false)
+        /// <summary>
+        /// 製品を表示する。
+        /// </summary>
+        /// <param name="includingDeletedElements">削除した商品も表示するかどうか。既定は表示しない事です</param>
+        public void ShowItems(bool includingDeletedElements = false)
         {
-            Console.WriteLine("There are {0} items in the stock.",_ListProduct.Count);
+            Console.WriteLine("There are {0} items in the stock.", _ListProduct.Count);
             int count = 0;
             foreach (Product item in _ListProduct)
             {
-                if (!deleteFlag)
+                if (includingDeletedElements)
                 {
-
+                    Console.WriteLine("-->" + ++count + " " + item.ToString());
                 }
-                Console.WriteLine("-->"+ ++count + " "+ item.ToString());
+                else
+                {
+                    if (item.DeleteFlag)
+                    {
+                        continue;
+                    }
+                    Console.WriteLine("-->" + ++count + " " + item.ToString());
+                }
             }
         }
+
+        /// <summary>
+        /// 商品を削除する。
+        /// </summary>
+        /// <param name="id">削除したい製品のIDです</param>
+        /// <returns>成功だったら、True値を戻る。反対はFalse値を戻る。</returns>
         public bool Delete(string id)
         {
             Product foundProduct = FindById(id);

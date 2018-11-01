@@ -32,6 +32,7 @@ namespace ProductManagerment
             // create a new product and return.
             return new Product(category, id, name, price, profitRate);
         }
+
         public Product(Category category, string id, string name, double price, double profitRate)
         {
             Id = id;
@@ -40,6 +41,8 @@ namespace ProductManagerment
             ProfitRate = profitRate;
             Category = category;
         }
+        
+
         public override string ToString()
         {
             return string.Format("ID: {0} Name: {1} Price: {2}  Profit rate: {3}", Id, Name, Price, ProfitRate);
